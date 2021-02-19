@@ -11,7 +11,7 @@ import UIKit
 class MainVC: UIViewController {
     
     // Create a timer, call timerCallback every one second.
-    let timer: Timer? = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
+  //  let timer: Timer? = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
     
     // MARK: STEP 8: UI Customization
     // Customize your imageView and buttons. Run the app to see how they look.
@@ -20,9 +20,9 @@ class MainVC: UIViewController {
         let view = UIImageView()
         
         // MARK: >> Your Code Here <<
-        
         view.translatesAutoresizingMaskIntoConstraints = false
-        
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.purple.cgColor
         return view
     }()
     
@@ -73,6 +73,22 @@ class MainVC: UIViewController {
         
         // MARK: >> Your Code Here <<
         
+        for button in buttons {
+            view.addSubview(button)
+        }
+        view.addSubview(imageView)
+        NSLayoutConstraint.activate([
+            imageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            imageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 200),
+            imageView.widthAnchor.constraint(equalToConstant: 200)
+        
+        ])
+//        NSLayoutConstraint.activate([
+//            for button in buttons {
+//
+//            }
+//        ])
         getNextQuestion()
         
         // MARK: STEP 10: Adding Callback to the Buttons
@@ -110,14 +126,20 @@ class MainVC: UIViewController {
         // After you are done, take a look at what's in the
         // QuestionProvider.Question type. You will need that for the
         // following steps.
-        
+        print("")
         // MARK: >> Your Code Here <<
-        
+        guard let question = QuestionProvider().getNextQuestion() else { return }
+//        guard let question = QuestionProvider.Question.init(image: UIImage(named: choices.namesToDisplay[0]), answer: "test", choices: choices.namesToDisplay) else { return }
         // MARK: STEP 6: Data Population
         // Populate the imageView and buttons using the question object we obtained
         // above.
         
         // MARK: >> Your Code Here <<
+        print(question.image)
+        imageView.image = question.image
+        for i in 0...4 {
+            buttons[i].setTitle(question.choices[i], for: .normal)
+        }
     }
     
     // This function will be called every one second
