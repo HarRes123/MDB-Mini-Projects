@@ -12,6 +12,15 @@ class MainVC: UIViewController {
     
     // Create a timer, call timerCallback every one second.
   //  let timer: Timer? = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
+    // Create a property for our timer, we will initialize it in viewDidLoad
+    var timer: Timer?
+    var progressTimer: Timer?
+    var progressViewTimer: Timer?
+    var correctAnswer: String?
+    var currentScore = 0
+    var imageHeightConstraint: NSLayoutConstraint?
+    var imageWidthConstraint: NSLayoutConstraint?
+    var tappedButton: UIButton?
     
     // MARK: STEP 8: UI Customization
     // Customize your imageView and buttons. Run the app to see how they look.
@@ -20,10 +29,32 @@ class MainVC: UIViewController {
         let view = UIImageView()
         
         // MARK: >> Your Code Here <<
-        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
+        view.clipsToBounds = true
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.purple.cgColor
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }()
+    
+    let progressView: UIProgressView = {
+        let view = UIProgressView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.progressTintColor = .blue
+        view.progress = 1.0
+        return view
+    }()
+    
+    let scoreLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Score: 0"
+        label.textColor = .black
+        label.font = .systemFont(ofSize: 15)
+        label.minimumScaleFactor = 0.5
+        label.numberOfLines = 0
+        label.adjustsFontSizeToFitWidth = true
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     let buttons: [UIButton] = {
@@ -36,14 +67,37 @@ class MainVC: UIViewController {
 
             // Tag the button its index
             button.tag = index
-            
-            // MARK: >> Your Code Here <<
-            
+                        
+            button.setTitleColor(.black, for: .normal)
+            button.titleLabel?.font = .systemFont(ofSize: 15)
+            button.backgroundColor = .systemYellow
+            button.layer.cornerRadius = 10
+            button.layer.borderWidth = 1
+            button.layer.borderColor = UIColor.black.cgColor
             button.translatesAutoresizingMaskIntoConstraints = false
+            button.titleLabel?.minimumScaleFactor = 0.5
+            button.titleLabel?.numberOfLines = 0
+            button.titleLabel?.adjustsFontSizeToFitWidth = true
             
             return button
         }
         
+    }()
+    
+    let pauseButton: UIButton = {
+        let button = UIButton()
+
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 15)
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Resume", for: .selected)
+        button.setTitle("Pause", for: .normal)
+        button.backgroundColor = .systemPink
+
+        return button
     }()
     
     // MARK: STEP 12: Stats Button
@@ -57,6 +111,9 @@ class MainVC: UIViewController {
     
     override func viewDidLoad() {
         view.backgroundColor = .white
+        
+        // Create a timer that calls timerCallback() every one second
+//        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
         
         // If you don't like the default presentation style,
         // you can change it to full screen too! This way you
@@ -73,23 +130,52 @@ class MainVC: UIViewController {
         
         // MARK: >> Your Code Here <<
         
-        for button in buttons {
-            view.addSubview(button)
+        
+        for i in 0...3 {
+            view.addSubview(buttons[i])
+            buttons[i].heightAnchor.constraint(equalToConstant: 50).isActive = true
+            buttons[i].widthAnchor.constraint(equalToConstant: view.frame.width / 3).isActive = true
         }
+        NSLayoutConstraint.activate([
+            buttons[0].bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -185),
+            buttons[0].leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
+            buttons[1].bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -185),
+            buttons[1].trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
+            buttons[2].bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -85),
+            buttons[2].leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
+            buttons[3].bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -85),
+            buttons[3].trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50)
+        ])
+        
         view.addSubview(imageView)
         NSLayoutConstraint.activate([
-            imageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            imageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -75),
             imageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 200),
-            imageView.widthAnchor.constraint(equalToConstant: 200)
         
         ])
-//        NSLayoutConstraint.activate([
-//            for button in buttons {
-//
-//            }
-//        ])
-        getNextQuestion()
+        view.addSubview(scoreLabel)
+        NSLayoutConstraint.activate([
+            scoreLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25),
+            scoreLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100),
+            scoreLabel.heightAnchor.constraint(equalToConstant: 20),
+            scoreLabel.widthAnchor.constraint(equalToConstant: 100)
+        ])
+        
+        view.addSubview(progressView)
+        NSLayoutConstraint.activate([
+            progressView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            progressView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 82),
+            progressView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25),
+            progressView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -25)
+        ])
+        
+        view.addSubview(pauseButton)
+        NSLayoutConstraint.activate([
+            pauseButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -25),
+            pauseButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25),
+            pauseButton.heightAnchor.constraint(equalToConstant: 40),
+            pauseButton.widthAnchor.constraint(equalToConstant: 90)
+        ])
         
         // MARK: STEP 10: Adding Callback to the Buttons
         // Use addTarget to connect the didTapAnswer function to the four
@@ -99,7 +185,13 @@ class MainVC: UIViewController {
         // cleaner way to do this, see if you can figure it out.
         
         // MARK: >> Your Code Here <<
+        for button in buttons {
+            button.addTarget(self, action: #selector(didTapAnswer(_:)), for: .touchUpInside)
+        }
         
+        pauseButton.addTarget(self, action: #selector(pressedPause(_:)), for: .touchUpInside)
+        
+        getNextQuestion()
         
         // MARK: STEP 12: Stats Button
         // Follow instructions at :49
@@ -126,20 +218,33 @@ class MainVC: UIViewController {
         // After you are done, take a look at what's in the
         // QuestionProvider.Question type. You will need that for the
         // following steps.
-        print("")
         // MARK: >> Your Code Here <<
-        guard let question = QuestionProvider().getNextQuestion() else { return }
-//        guard let question = QuestionProvider.Question.init(image: UIImage(named: choices.namesToDisplay[0]), answer: "test", choices: choices.namesToDisplay) else { return }
+        guard let question = QuestionProvider.shared.getNextQuestion() else { return }
+        correctAnswer = question.answer
+        progressView.progress = 1.0
         // MARK: STEP 6: Data Population
         // Populate the imageView and buttons using the question object we obtained
         // above.
         
         // MARK: >> Your Code Here <<
-        print(question.image)
+        imageHeightConstraint?.isActive = false
+        imageWidthConstraint?.isActive = false
+        
         imageView.image = question.image
-        for i in 0...4 {
+        let ratio = (imageView.image?.size.width)! / (imageView.image?.size.height)!
+        imageHeightConstraint = imageView.heightAnchor.constraint(equalToConstant: view.frame.width - 150)
+        imageWidthConstraint = imageView.widthAnchor.constraint(equalToConstant: ratio * (view.frame.width - 150))
+        
+        imageHeightConstraint?.isActive = true
+        imageWidthConstraint?.isActive = true
+
+        
+        for i in 0...3 {
             buttons[i].setTitle(question.choices[i], for: .normal)
         }
+        progressTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(progressTimerCallback), userInfo: nil, repeats: true)
+        progressViewTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(progressViewTimerCallBack), userInfo: nil, repeats: true)
+        
     }
     
     // This function will be called every one second
@@ -150,9 +255,33 @@ class MainVC: UIViewController {
         // the instruction here is intentionally vague, so read the spec
         // and take some time to plan. you may need
         // to come back and rework this step later on.
-        
         // MARK: >> Your Code Here <<
+        timer?.invalidate()
+        progressTimer?.invalidate()
+        tappedButton?.backgroundColor = .systemYellow
+        scoreLabel.text = "Score: \(self.currentScore)"
+        getNextQuestion()
     }
+    
+    @objc func progressViewTimerCallBack() {
+        progressView.progress -= 0.2
+    }
+    
+    @objc func progressTimerCallback() {
+        progressView.progress = 0.0
+        progressViewTimer?.invalidate()
+        progressTimer?.invalidate()
+        timer?.invalidate()
+        for button in buttons {
+            if button.titleLabel?.text == correctAnswer {
+                tappedButton = button
+            }
+        }
+        tappedButton?.backgroundColor = .green
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
+                
+    }
+    
     
     @objc func didTapAnswer(_ sender: UIButton) {
         // MARK: STEP 9: Buttons' Logic
@@ -167,6 +296,42 @@ class MainVC: UIViewController {
         // Hint: You can use `sender.tag` to identify which button is tapped
         
         // MARK: >> Your Code Here <<
+        timer?.invalidate()
+        progressView.progress = 0.0
+        progressViewTimer?.invalidate()
+        progressTimer?.invalidate()
+        tappedButton = buttons[sender.tag]
+        if tappedButton?.titleLabel?.text == correctAnswer {
+            print("correct")
+            tappedButton?.backgroundColor = .green
+            currentScore += 1
+        } else {
+            print("incorrect")
+            tappedButton?.backgroundColor = .red
+        }
+        
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
+    }
+    
+    @objc func pressedPause(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected;
+        for button in buttons {
+            button.isEnabled = !button.isEnabled
+        }
+        if sender.isSelected {
+            sender.backgroundColor = .systemOrange
+            currentScore = 0
+            scoreLabel.text = "Score: \(currentScore)"
+            progressView.progress = 0.0
+            progressTimer?.invalidate()
+            progressViewTimer?.invalidate()
+            timer?.invalidate()
+        } else {
+            sender.backgroundColor = .systemPink
+            QuestionProvider.shared.reset()
+            getNextQuestion()
+        }
+        
     }
     
     @objc func didTapStats(_ sender: UIButton) {

@@ -50,7 +50,7 @@ class StartVC: UIViewController {
         
         button.setTitle("Start", for: .normal)
         
-        button.setTitleColor(.purple, for: .normal)
+        button.setTitleColor(.black, for: .normal)
     
         // MARK: STEP 1: UIButton Customization
         // Create you own customized UIButton.
@@ -61,17 +61,17 @@ class StartVC: UIViewController {
         // You can also go to https://developer.apple.com/documentation/uikit/uibutton#topics
         // where you will find all the available APIs.
         
-        button.backgroundColor = .systemPink
+        button.backgroundColor = .systemYellow
         button.layer.cornerRadius = 10
-        button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.purple.cgColor
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .cyan // == UIColor(expected type).white
+        view.backgroundColor = .white // == UIColor(expected type).white
         
         // MARK: STEP 2: Subviews and Constraints
         // Read through the following code and make sure that you understand
