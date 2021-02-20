@@ -38,7 +38,7 @@ class StatsVC: UIViewController {
     // Method 2: Custom initializer
     var lastThreeAnswers: [String]
     init(data: [String]) {
-        lastThreeAnswers = data
+        lastThreeAnswers = data.reversed()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -117,7 +117,7 @@ class StatsVC: UIViewController {
         view.backgroundColor = .white
         // MARK: >> Your Code Here <<
         
-        answersLabel.text! += lastThreeAnswers.joined(separator: ", ")
+        answersLabel.text! += lastThreeAnswers.joined(separator: ",\n")
         
         view.addSubview(dismissButton)
         NSLayoutConstraint.activate([

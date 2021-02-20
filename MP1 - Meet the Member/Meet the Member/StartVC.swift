@@ -68,6 +68,13 @@ class StartVC: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    let MDBLogo: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "mdb")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -132,6 +139,19 @@ class StartVC: UIViewController {
             startButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             startButton.heightAnchor.constraint(equalToConstant: 50),
             startButton.widthAnchor.constraint(equalToConstant: 75)
+            
+        
+            
+        ])
+        
+        view.addSubview(MDBLogo)
+        let ratio = (MDBLogo.image?.size.width)! / (MDBLogo.image?.size.height)!
+        NSLayoutConstraint.activate([
+
+            MDBLogo.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            MDBLogo.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
+            MDBLogo.widthAnchor.constraint(equalToConstant: ratio * (view.frame.width - 275)),
+            MDBLogo.heightAnchor.constraint(equalToConstant: view.frame.width - 275)
             
         
             
