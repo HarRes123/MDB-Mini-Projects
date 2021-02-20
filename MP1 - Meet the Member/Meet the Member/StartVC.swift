@@ -29,9 +29,9 @@ class StartVC: UIViewController {
         let label = UILabel()
         
         // == UIColor.darkGray
-        label.textColor = .darkGray
+        label.textColor = .black
         
-        label.text = "Meet the Member"
+        label.text = "Meet the Members"
         
         // == NSTextAlignment(expected type).center
         label.textAlignment = .center
@@ -136,6 +136,10 @@ class StartVC: UIViewController {
         
             
         ])
+        
+        if UserDefaults.standard.object(forKey: "streak") == nil {
+            UserDefaults.standard.setValue(0, forKey: "streak")
+        }
         
         // MARK: STEP 3: Adding Callbacks
         // Just read the code.

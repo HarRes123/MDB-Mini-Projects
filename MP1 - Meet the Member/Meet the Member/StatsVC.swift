@@ -19,7 +19,7 @@ class StatsVC: UIViewController {
     // the data transferring for StatsVC.
     
     // Method 1: Implicit Unwrapped Instance Property
-    var dataWeNeedExample1: String!
+    //var lastThreeAnswers: String!
     //
     // Check didTapStats in MainVC.swift on how to use it.
     //
@@ -36,9 +36,9 @@ class StatsVC: UIViewController {
     // have no idea that this variable needs to be populated.
     
     // Method 2: Custom initializer
-    var dataWeNeedExample2: String
-    init(data: String) {
-        dataWeNeedExample2 = data
+    var lastThreeAnswers: [String]
+    init(data: [String]) {
+        lastThreeAnswers = data
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -71,9 +71,79 @@ class StatsVC: UIViewController {
     
     // MARK: >> Your Code Here <<
     
+    let dismissButton: UIButton = {
+        let button = UIButton()
+
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 15)
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Dismiss", for: .normal)
+        button.backgroundColor = .cyan
+
+        return button
+    }()
+    
+    let longestStreak: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.text = "Longest Streak: \(UserDefaults.standard.object(forKey: "streak")!)"
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 27, weight: .medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    let answersLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.text = "Previous Answers: "
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 27, weight: .medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.minimumScaleFactor = 0.5
+        label.numberOfLines = 0
+        label.adjustsFontSizeToFitWidth = true
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print(lastThreeAnswers)
+        print(UserDefaults.standard.integer(forKey: "streak"))
+        view.backgroundColor = .white
         // MARK: >> Your Code Here <<
+        
+        answersLabel.text! += lastThreeAnswers.joined(separator: ", ")
+        
+        view.addSubview(dismissButton)
+        NSLayoutConstraint.activate([
+            dismissButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25),
+            dismissButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25),
+            dismissButton.heightAnchor.constraint(equalToConstant: 40),
+            dismissButton.widthAnchor.constraint(equalToConstant: 90)
+        ])
+        dismissButton.addTarget(self, action: #selector(didDismiss(_:)), for: .touchUpInside)
+        
+        view.addSubview(answersLabel)
+        NSLayoutConstraint.activate([
+            answersLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -100),
+            answersLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            answersLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50)
+        ])
+        
+        view.addSubview(longestStreak)
+        NSLayoutConstraint.activate([
+            longestStreak.bottomAnchor.constraint(equalTo: answersLabel.safeAreaLayoutGuide.bottomAnchor, constant: 75),
+            longestStreak.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            longestStreak.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50)
+        ])
+    }
+    
+    @objc func didDismiss(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
     }
 }

@@ -18,9 +18,11 @@ class MainVC: UIViewController {
     var progressViewTimer: Timer?
     var correctAnswer: String?
     var currentScore = 0
+    var streak = 0
     var imageHeightConstraint: NSLayoutConstraint?
     var imageWidthConstraint: NSLayoutConstraint?
     var tappedButton: UIButton?
+    var lastThreeAnswers: [String] = []
     
     // MARK: STEP 8: UI Customization
     // Customize your imageView and buttons. Run the app to see how they look.
@@ -96,6 +98,21 @@ class MainVC: UIViewController {
         button.setTitle("Resume", for: .selected)
         button.setTitle("Pause", for: .normal)
         button.backgroundColor = .systemPink
+
+        return button
+    }()
+    
+    let statsButton: UIButton = {
+        let button = UIButton()
+
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 15)
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Stats", for: .normal)
+        button.backgroundColor = .cyan
 
         return button
     }()
@@ -177,6 +194,14 @@ class MainVC: UIViewController {
             pauseButton.widthAnchor.constraint(equalToConstant: 90)
         ])
         
+        view.addSubview(statsButton)
+        NSLayoutConstraint.activate([
+            statsButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25),
+            statsButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25),
+            statsButton.heightAnchor.constraint(equalToConstant: 40),
+            statsButton.widthAnchor.constraint(equalToConstant: 90)
+        ])
+        
         // MARK: STEP 10: Adding Callback to the Buttons
         // Use addTarget to connect the didTapAnswer function to the four
         // buttons touchUpInside event.
@@ -190,7 +215,7 @@ class MainVC: UIViewController {
         }
         
         pauseButton.addTarget(self, action: #selector(pressedPause(_:)), for: .touchUpInside)
-        
+        statsButton.addTarget(self, action: #selector(didTapStats(_:)), for: .touchUpInside)
         getNextQuestion()
         
         // MARK: STEP 12: Stats Button
@@ -199,12 +224,18 @@ class MainVC: UIViewController {
         // MARK: >> Your Code Here <<
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        if !pauseButton.isSelected {
+            pressedPause(pauseButton)
+        }
+    }
+    
     // What's the difference between viewDidLoad() and
     // viewWillAppear()? What about viewDidAppear()?
     override func viewWillAppear(_ animated: Bool) {
         // MARK: STEP 15: Resume Game
         // Restart the timer when view reappear.
-        
+        timer?.invalidate()
         // MARK: >> Your Code Here <<
     }
     
@@ -221,6 +252,9 @@ class MainVC: UIViewController {
         // MARK: >> Your Code Here <<
         guard let question = QuestionProvider.shared.getNextQuestion() else { return }
         correctAnswer = question.answer
+        
+        print(correctAnswer!)
+        
         progressView.progress = 1.0
         // MARK: STEP 6: Data Population
         // Populate the imageView and buttons using the question object we obtained
@@ -246,6 +280,18 @@ class MainVC: UIViewController {
         progressViewTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(progressViewTimerCallBack), userInfo: nil, repeats: true)
         
     }
+    private func changeButtonState() {
+        for button in buttons {
+            button.isEnabled = !button.isEnabled
+        }
+    }
+    
+    private func appendLastThree() {
+        if lastThreeAnswers.count == 3 {
+            lastThreeAnswers.remove(at: 0)
+        }
+        lastThreeAnswers.append(correctAnswer!)
+    }
     
     // This function will be called every one second
     @objc func timerCallback() {
@@ -259,7 +305,8 @@ class MainVC: UIViewController {
         timer?.invalidate()
         progressTimer?.invalidate()
         tappedButton?.backgroundColor = .systemYellow
-        scoreLabel.text = "Score: \(self.currentScore)"
+        changeButtonState()
+        pauseButton.isEnabled = true
         getNextQuestion()
     }
     
@@ -272,13 +319,17 @@ class MainVC: UIViewController {
         progressViewTimer?.invalidate()
         progressTimer?.invalidate()
         timer?.invalidate()
+        streak = 0
         for button in buttons {
             if button.titleLabel?.text == correctAnswer {
                 tappedButton = button
             }
         }
+        changeButtonState()
+        pauseButton.isEnabled = false
+        appendLastThree()
         tappedButton?.backgroundColor = .green
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
                 
     }
     
@@ -297,7 +348,6 @@ class MainVC: UIViewController {
         
         // MARK: >> Your Code Here <<
         timer?.invalidate()
-        progressView.progress = 0.0
         progressViewTimer?.invalidate()
         progressTimer?.invalidate()
         tappedButton = buttons[sender.tag]
@@ -305,24 +355,31 @@ class MainVC: UIViewController {
             print("correct")
             tappedButton?.backgroundColor = .green
             currentScore += 1
+            streak += 1
+            if streak > UserDefaults.standard.integer(forKey: "streak") {
+                UserDefaults.standard.set(streak, forKey: "streak")
+            }
+
         } else {
+            streak = 0
             print("incorrect")
             tappedButton?.backgroundColor = .red
         }
-        
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
+        appendLastThree()
+        changeButtonState()
+        pauseButton.isEnabled = false
+        scoreLabel.text = "Score: \(self.currentScore)"
+        timer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
     }
     
     @objc func pressedPause(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected;
-        for button in buttons {
-            button.isEnabled = !button.isEnabled
-        }
+        changeButtonState()
         if sender.isSelected {
             sender.backgroundColor = .systemOrange
             currentScore = 0
+            streak = 0
             scoreLabel.text = "Score: \(currentScore)"
-            progressView.progress = 0.0
             progressTimer?.invalidate()
             progressViewTimer?.invalidate()
             timer?.invalidate()
@@ -336,16 +393,14 @@ class MainVC: UIViewController {
     
     @objc func didTapStats(_ sender: UIButton) {
         
-        let vc = StatsVC(data: "Hello")
-        
-        vc.dataWeNeedExample1 = "Hello"
+        let vc = StatsVC(data: lastThreeAnswers)
         
         // MARK: STEP 13: StatsVC Data
         // Follow instructions in StatsVC. You also need to invalidate
         // the timer instance to pause game before going to StatsVC.
         
         // MARK: >> Your Code Here <<
-        
+        vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
     }
     
