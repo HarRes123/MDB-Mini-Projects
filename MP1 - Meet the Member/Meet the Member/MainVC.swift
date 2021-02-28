@@ -141,7 +141,7 @@ class MainVC: UIViewController {
         // modalPresentationStyle = .fullScreen
         
         // MARK: STEP 7: Adding Subviews and Constraints
-        // Add imageViews and buttons to the root view. Create constaints
+        // Add imageViews and buttons to the root view. Create constraints
         // for the layout. Then run the app with ⌘+r. You should see the image
         // for the first question as well as the four options.
         
@@ -394,6 +394,8 @@ class MainVC: UIViewController {
     @objc func didTapStats(_ sender: UIButton) {
         
         let vc = StatsVC(data: lastThreeAnswers)
+        
+        vc.modalPresentationStyle = .fullScreen
         
         // MARK: STEP 13: StatsVC Data
         // Follow instructions in StatsVC. You also need to invalidate
