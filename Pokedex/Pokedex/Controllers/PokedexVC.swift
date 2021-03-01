@@ -86,6 +86,7 @@ class PokedexVC: UIViewController, SelectedTypesProtocol {
         view.addSubview(gridToggle)
         view.addSubview(filtersButton)
         
+        view.backgroundColor = .white
         collectionView.reloadData()
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -163,12 +164,7 @@ extension PokedexVC: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         pokemonsToDisplay = pokemonsToDisplay.filter({item in
             
-            var stringArray: [String] = []
-            for item in item.types {
-                stringArray.append("\(item)")
-            }
-            
-            return item.name.localizedCaseInsensitiveContains(searchText)
+            item.name.localizedCaseInsensitiveContains(searchText)
   
         })
         
