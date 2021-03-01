@@ -73,9 +73,11 @@ class PokeInfoVC: UIViewController {
         }
     
         nameLabel.text = pokemon?.name
+        
         view.addSubview(imageView)
         view.addSubview(infoLabel)
         view.addSubview(nameLabel)
+        
         NSLayoutConstraint.activate([
             imageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             imageView.topAnchor.constraint(equalTo: nameLabel.safeAreaLayoutGuide.topAnchor, constant: 50),
@@ -84,13 +86,11 @@ class PokeInfoVC: UIViewController {
             
         ])
         
-        
         NSLayoutConstraint.activate([
             infoLabel.topAnchor.constraint(equalTo: imageView.safeAreaLayoutGuide.topAnchor, constant: 150),
             infoLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
             infoLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50)
         ])
-        
         
         NSLayoutConstraint.activate([
             nameLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
@@ -102,7 +102,7 @@ class PokeInfoVC: UIViewController {
 
 /**
  Source: https://stackoverflow.com/questions/27292255/how-to-loop-over-struct-properties-in-swift
- Added !property.contains("image"), property != "name" and test for special keyword
+ Added !property.contains("image"), property != "name" and test for "special" keyword
  */
 
 protocol Loopable {
