@@ -82,8 +82,8 @@ class FiltersVC: UIViewController {
         //let vc = PokedexVC()
         //PokedexVC.selectedTypes = selectedTypes
         
-        if self.delegate != nil  {
-            self.delegate?.sendSelectedTypes(data: selectedTypes)
+        if delegate != nil  {
+            delegate?.sendSelectedTypes(data: selectedTypes)
             dismiss(animated: true, completion: nil)
         }
                 

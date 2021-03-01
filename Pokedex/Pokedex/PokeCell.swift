@@ -14,11 +14,23 @@ class PokeCell: UICollectionViewCell {
     
     var cellContents: Pokemon? {
         didSet {
-            if let url: URL = URL(string: cellContents!.imageUrl) {
-                if let image = try? Data(contentsOf: url) {
-                    imageView.image = UIImage(data: image)
+            
+            let completion: (UIImage)->Void = { image in
+                DispatchQueue.main.async {
+                    self.imageView.image = image
                 }
             }
+            
+            DispatchQueue.global(qos: .userInitiated).async {
+                
+                if let url: URL = URL(string: self.cellContents!.imageUrl) {
+                    if let image = try? Data(contentsOf: url) {
+                        //self.imageView.image = UIImage(data: image)
+                        completion(UIImage(data: image)!)
+                    }
+                }
+            }
+
             infoView.text = "\((cellContents?.name)!): \((cellContents?.id)!)"
             
         }

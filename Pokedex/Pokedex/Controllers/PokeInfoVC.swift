@@ -65,10 +65,10 @@ class PokeInfoVC: UIViewController {
         } catch {
             print("no bueno")
         }
-        
-        if let url: URL = URL(string: pokemon!.imageUrlLarge) {
+
+        if let url: URL = URL(string: self.pokemon!.imageUrlLarge) {
             if let image = try? Data(contentsOf: url) {
-                imageView.image = UIImage(data: image)
+                self.imageView.image = UIImage(data: image)
             }
         }
     
