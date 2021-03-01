@@ -15,8 +15,8 @@ class PokeCell: UICollectionViewCell {
     var cellContents: Pokemon? {
         didSet {
             
-            let completion: (UIImage)->Void = { image in
-                DispatchQueue.main.async {
+            let completion: (UIImage) -> Void = { image in
+                DispatchQueue.main.sync {
                     self.imageView.image = image
                 }
             }
