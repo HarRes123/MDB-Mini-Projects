@@ -86,8 +86,6 @@ class FiltersVC: UIViewController {
             self.delegate?.sendSelectedTypes(data: selectedTypes)
             dismiss(animated: true, completion: nil)
         }
-        
-        dismiss(animated: true, completion: nil)
-        
+                
     }
 }
