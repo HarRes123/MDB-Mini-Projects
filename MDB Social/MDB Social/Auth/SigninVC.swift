@@ -49,7 +49,7 @@ class SigninVC: UIViewController {
     
     private let passwordTextField: AuthTextField = {
         let tf = AuthTextField(title: "Password:")
-        
+        tf.textField.isSecureTextEntry = true
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -187,6 +187,8 @@ class SigninVC: UIViewController {
     }
     
     @objc private func didTapSignUp(_ sender: UIButton) {
+        let vc = SignupVC()
+        present(vc, animated: true, completion: nil)
         
     }
     

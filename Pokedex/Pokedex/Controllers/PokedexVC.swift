@@ -180,8 +180,8 @@ extension PokedexVC: UISearchBarDelegate {
         dismissSearch()
         pokemonsToDisplay = pokemonsToDisplayCopy
     }
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
         searchBar.endEditing(true)
     }
 }
