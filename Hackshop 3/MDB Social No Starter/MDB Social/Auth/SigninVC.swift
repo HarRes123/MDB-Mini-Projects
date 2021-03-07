@@ -137,53 +137,7 @@ class SigninVC: UIViewController {
     }
 
     @objc func didTapSignIn(_ sender: UIButton) {
-        guard let email = emailTextField.text, email != "" else {
-            showErrorBanner(withTitle: "Missing email",
-                            subtitle: "Please provide an email")
-            return
-        }
         
-        guard let password = passwordTextField.text, password != "" else {
-            showErrorBanner(withTitle: "Missing password",
-                            subtitle: "Please provide a password")
-            return
-        }
-        
-        signinButton.showLoading()
-        FIRAuthProvider.shared.signIn(withEmail: email, password: password) { [weak self] result in
-            
-            defer {
-                self?.signinButton.hideLoading()
-            }
-            
-            switch result {
-            case .success:
-                guard let window = UIApplication.shared
-                        .windows.filter({ $0.isKeyWindow }).first else { return }
-                let vc = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
-                window.rootViewController = vc
-                let options: UIView.AnimationOptions = .transitionCrossDissolve
-                let duration: TimeInterval = 0.3
-                UIView.transition(with: window, duration: duration, options: options, animations: {}, completion: nil)
-            case .failure(let error):
-                switch error {
-                case .wrongPassword:
-                    self?.showErrorBanner(withTitle: "Incorrect password",
-                                          subtitle: "Please check your password and try again")
-                case .userNotFound:
-                    self?.showErrorBanner(withTitle: "User not found",
-                                          subtitle: "A user with email \(email) doesn't exist")
-                case .internalError:
-                    self?.showErrorBanner(withTitle: "An internal error occured",
-                                          subtitle: "Please try again later")
-                case .invalidEmail:
-                    self?.showErrorBanner(withTitle: "Invalid email",
-                                          subtitle: "Please check your email and try again")
-                default:
-                    return
-                }
-            }
-        }
     }
     
     @objc private func didTapSignUp(_ sender: UIButton) {
