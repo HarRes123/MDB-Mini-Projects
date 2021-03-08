@@ -120,25 +120,25 @@ class SignupVC: UIViewController {
     @objc func didTapSignUp(_ sender: UIButton) {
         guard let name = nameTextField.text, name != "" else {
             showErrorBanner(withTitle: "Missing full name",
-                            subtitle: "Please provide a full name")
+                            subtitle: "Please include your full name")
             return
         }
         
         guard let email = emailTextField.text, email != "" else {
             showErrorBanner(withTitle: "Missing email",
-                            subtitle: "Please provide an email")
+                            subtitle: "Please include your email address")
             return
         }
         
         guard let username = usernameTextField.text, username != "" else {
             showErrorBanner(withTitle: "Missing username",
-                            subtitle: "Please provide a username")
+                            subtitle: "Please pick a username")
             return
         }
         
         guard let password = passwordTextField.text, password != "" else {
             showErrorBanner(withTitle: "Missing password",
-                            subtitle: "Please provide a password")
+                            subtitle: "Please pick a password")
             return
         }
         signUpButton.showLoading()
@@ -150,7 +150,6 @@ class SignupVC: UIViewController {
             
             switch result {
             case .success:
-                print("YE")
                 guard let window = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first else { return }
                 let vc = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
                 window.rootViewController = vc
