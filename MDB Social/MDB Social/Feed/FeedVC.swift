@@ -19,7 +19,19 @@ class FeedVC: UIViewController {
        let config = UIImage.SymbolConfiguration(font: .systemFont(ofSize: 30, weight: .medium))
        btn.setPreferredSymbolConfiguration(config, forImageIn: .normal)
        btn.tintColor = .white
-       btn.layer.cornerRadius = 50
+       btn.layer.cornerRadius = 25
+       btn.translatesAutoresizingMaskIntoConstraints = false
+       return btn
+   }()
+    
+    private let createButton: UIButton = {
+       let btn = UIButton()
+       btn.backgroundColor = .primary
+       btn.setImage(UIImage(systemName: "plus"), for: .normal)
+       let config = UIImage.SymbolConfiguration(font: .systemFont(ofSize: 30, weight: .medium))
+       btn.setPreferredSymbolConfiguration(config, forImageIn: .normal)
+       btn.tintColor = .white
+       btn.layer.cornerRadius = 25
        btn.translatesAutoresizingMaskIntoConstraints = false
        return btn
    }()
@@ -45,14 +57,23 @@ class FeedVC: UIViewController {
         events = FIRDatabaseRequest.shared.getEvents(vc: self)
         view.addSubview(collectionView)
         view.addSubview(signOutButton)
+        view.addSubview(createButton)
         signOutButton.addTarget(self, action: #selector(didTapSignOut(_:)), for: .touchUpInside)
-        collectionView.frame = view.bounds.inset(by: UIEdgeInsets(top: 150, left: 10, bottom: 0, right: 10))
+        createButton.addTarget(self, action: #selector(didTapCreate(_:)), for: .touchUpInside)
+        collectionView.frame = view.bounds.inset(by: UIEdgeInsets(top: 175, left: 10, bottom: 0, right: 10))
         
         NSLayoutConstraint.activate([
-            signOutButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            signOutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
-            signOutButton.widthAnchor.constraint(equalToConstant: 100),
-            signOutButton.heightAnchor.constraint(equalToConstant: 100)
+            signOutButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            signOutButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25),
+            signOutButton.widthAnchor.constraint(equalToConstant: 50),
+            signOutButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        NSLayoutConstraint.activate([
+            createButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            createButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -25),
+            createButton.widthAnchor.constraint(equalToConstant: 50),
+            createButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         
         collectionView.backgroundColor = .clear
@@ -70,6 +91,10 @@ class FeedVC: UIViewController {
             let duration: TimeInterval = 0.3
             UIView.transition(with: window, duration: duration, options: options, animations: {}, completion: nil)
         }
+    }
+    @objc func didTapCreate(_ sender: UIButton) {
+        let vc = CreateEntryVC()
+        present(vc, animated: true, completion: nil)
     }
 }
 

@@ -38,6 +38,7 @@ class FIRDatabaseRequest {
         if (FIRAuthProvider.shared.isSignedIn()) {
             listener = db.collection("events").order(by: "startTimeStamp", descending: true).addSnapshotListener { querySnapshot, error in
                 events = []
+                
                 if (FIRAuthProvider.shared.isSignedIn()) {
                     guard let documents = querySnapshot?.documents else {
                         return

@@ -29,6 +29,7 @@
 		1AF3868125E88AA20006AE59 /* FIRDatabaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF3868025E88AA20006AE59 /* FIRDatabaseRequest.swift */; };
 		62D4BDBE25F58A660041B573 /* SignupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D4BDBD25F58A660041B573 /* SignupVC.swift */; };
 		62D4BDC125F59B760041B573 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D4BDC025F59B760041B573 /* FeedCell.swift */; };
+		62D7212325FBDD33001ED7FB /* CreateEntryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D7212225FBDD33001ED7FB /* CreateEntryVC.swift */; };
 		88D1856E3E3B7E97C54E6FB3 /* Pods_MDB_Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E51BF3FE48C081C2540BE42E /* Pods_MDB_Social.framework */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +58,7 @@
 		1AF3868025E88AA20006AE59 /* FIRDatabaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FIRDatabaseRequest.swift; sourceTree = "<group>"; };
 		62D4BDBD25F58A660041B573 /* SignupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupVC.swift; sourceTree = "<group>"; };
 		62D4BDC025F59B760041B573 /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
+		62D7212225FBDD33001ED7FB /* CreateEntryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEntryVC.swift; sourceTree = "<group>"; };
 		97EDB17FB89D773DE44696EF /* Pods-MDB Social.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MDB Social.debug.xcconfig"; path = "Target Support Files/Pods-MDB Social/Pods-MDB Social.debug.xcconfig"; sourceTree = "<group>"; };
 		BC2F19D1A2D8BB347835EFD1 /* Pods-MDB Social.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MDB Social.release.xcconfig"; path = "Target Support Files/Pods-MDB Social/Pods-MDB Social.release.xcconfig"; sourceTree = "<group>"; };
 		E51BF3FE48C081C2540BE42E /* Pods_MDB_Social.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MDB_Social.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -156,6 +158,7 @@
 				1AF3864D25E83B850006AE59 /* FeedVC.swift */,
 				1AF3865125E83C1A0006AE59 /* FeedNavigationVC.swift */,
 				62D4BDC025F59B760041B573 /* FeedCell.swift */,
+				62D7212225FBDD33001ED7FB /* CreateEntryVC.swift */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 				1AF385F625E812170006AE59 /* SigninVC.swift in Sources */,
 				1AF3865F25E855BE0006AE59 /* UIColor+ColorScheme.swift in Sources */,
 				1AF3864025E81A9E0006AE59 /* AuthProvider.swift in Sources */,
+				62D7212325FBDD33001ED7FB /* CreateEntryVC.swift in Sources */,
 				62D4BDBE25F58A660041B573 /* SignupVC.swift in Sources */,
 				1AF385F225E812170006AE59 /* AppDelegate.swift in Sources */,
 				1AF3864325E81C4A0006AE59 /* Event.swift in Sources */,
