@@ -27,6 +27,7 @@
 		1AF3865F25E855BE0006AE59 /* UIColor+ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF3865E25E855BE0006AE59 /* UIColor+ColorScheme.swift */; };
 		1AF3867E25E877B40006AE59 /* LoadingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF3867D25E877B40006AE59 /* LoadingButton.swift */; };
 		1AF3868125E88AA20006AE59 /* FIRDatabaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF3868025E88AA20006AE59 /* FIRDatabaseRequest.swift */; };
+		6211413625FC6546007ECAB4 /* DetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6211413525FC6546007ECAB4 /* DetailsVC.swift */; };
 		62D4BDBE25F58A660041B573 /* SignupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D4BDBD25F58A660041B573 /* SignupVC.swift */; };
 		62D4BDC125F59B760041B573 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D4BDC025F59B760041B573 /* FeedCell.swift */; };
 		62D7212325FBDD33001ED7FB /* CreateEntryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D7212225FBDD33001ED7FB /* CreateEntryVC.swift */; };
@@ -56,6 +57,7 @@
 		1AF3865E25E855BE0006AE59 /* UIColor+ColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+ColorScheme.swift"; sourceTree = "<group>"; };
 		1AF3867D25E877B40006AE59 /* LoadingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingButton.swift; sourceTree = "<group>"; };
 		1AF3868025E88AA20006AE59 /* FIRDatabaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FIRDatabaseRequest.swift; sourceTree = "<group>"; };
+		6211413525FC6546007ECAB4 /* DetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsVC.swift; sourceTree = "<group>"; };
 		62D4BDBD25F58A660041B573 /* SignupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupVC.swift; sourceTree = "<group>"; };
 		62D4BDC025F59B760041B573 /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 		62D7212225FBDD33001ED7FB /* CreateEntryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEntryVC.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 				1AF3865125E83C1A0006AE59 /* FeedNavigationVC.swift */,
 				62D4BDC025F59B760041B573 /* FeedCell.swift */,
 				62D7212225FBDD33001ED7FB /* CreateEntryVC.swift */,
+				6211413525FC6546007ECAB4 /* DetailsVC.swift */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -316,6 +319,7 @@
 				1AF3865F25E855BE0006AE59 /* UIColor+ColorScheme.swift in Sources */,
 				1AF3864025E81A9E0006AE59 /* AuthProvider.swift in Sources */,
 				62D7212325FBDD33001ED7FB /* CreateEntryVC.swift in Sources */,
+				6211413625FC6546007ECAB4 /* DetailsVC.swift in Sources */,
 				62D4BDBE25F58A660041B573 /* SignupVC.swift in Sources */,
 				1AF385F225E812170006AE59 /* AppDelegate.swift in Sources */,
 				1AF3864325E81C4A0006AE59 /* Event.swift in Sources */,

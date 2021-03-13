@@ -85,7 +85,6 @@ class SigninVC: UIViewController {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
         view.backgroundColor = .background
-        
         view.addSubview(titleLabel)
         view.addSubview(titleSecLabel)
         
@@ -105,6 +104,8 @@ class SigninVC: UIViewController {
         view.addSubview(stack)
         stack.addArrangedSubview(emailTextField)
         stack.addArrangedSubview(passwordTextField)
+        emailTextField.textField.delegate = self
+        passwordTextField.textField.delegate = self
         
         NSLayoutConstraint.activate([
             stack.leadingAnchor.constraint(equalTo: view.leadingAnchor,
@@ -207,5 +208,11 @@ class SigninVC: UIViewController {
                     shadowColor: .primaryText,
                     shadowOpacity: 0.3,
                     shadowBlurRadius: 10)
+    }
+}
+
+extension SigninVC: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
     }
 }

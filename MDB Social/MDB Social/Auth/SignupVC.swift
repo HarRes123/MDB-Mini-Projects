@@ -87,6 +87,10 @@ class SignupVC: UIViewController {
         stackView.addArrangedSubview(usernameTextField)
         stackView.addArrangedSubview(emailTextField)
         stackView.addArrangedSubview(passwordTextField)
+        nameTextField.textField.delegate = self
+        usernameTextField.textField.delegate = self
+        emailTextField.textField.delegate = self
+        passwordTextField.textField.delegate = self
         
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor,
@@ -177,5 +181,11 @@ class SignupVC: UIViewController {
                     shadowColor: .primaryText,
                     shadowOpacity: 0.3,
                     shadowBlurRadius: 10)
+    }
+}
+
+extension SignupVC: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
     }
 }

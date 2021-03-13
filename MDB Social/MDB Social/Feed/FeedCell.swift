@@ -86,12 +86,14 @@ class FeedCell: UICollectionViewCell {
        
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .cyan
+        backgroundColor = .quaternarySystemFill
 
         contentView.addSubview(imageView)
         contentView.addSubview(event)
         contentView.addSubview(member)
         contentView.addSubview(rsvp)
+        
+        event.widthAnchor.constraint(equalToConstant: self.frame.width / 2).isActive = true
 
         self.layer.cornerRadius = 15
         self.layer.masksToBounds = true
@@ -109,7 +111,12 @@ class FeedCell: UICollectionViewCell {
             imageView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 20),
             imageView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             imageView.widthAnchor.constraint(equalToConstant: 90),
-            imageView.heightAnchor.constraint(equalToConstant: 90)
+            imageView.heightAnchor.constraint(equalToConstant: 90),
+            event.widthAnchor.constraint(equalToConstant: self.frame.width / 2),
+            member.widthAnchor.constraint(equalToConstant: self.frame.width / 2),
+            rsvp.widthAnchor.constraint(equalToConstant: self.frame.width / 2)
+            
+            
         ])
     }
 

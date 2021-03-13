@@ -58,7 +58,7 @@ class CreateEntryVC: UIViewController, UINavigationControllerDelegate {
         let button = UIButton()
         button.setTitle("Create Event", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = .cyan
+        button.backgroundColor = .quaternarySystemFill
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.black.cgColor
         button.layer.cornerRadius = 15
