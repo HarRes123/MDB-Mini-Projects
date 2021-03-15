@@ -107,7 +107,7 @@ class CreateEntryVC: UIViewController, UINavigationControllerDelegate {
         NSLayoutConstraint.activate([
             stack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 30),
             stack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -30),
-            stack.topAnchor.constraint(equalTo: dismissButton.safeAreaLayoutGuide.bottomAnchor, constant: 50)
+            stack.topAnchor.constraint(equalTo: dismissButton.safeAreaLayoutGuide.bottomAnchor, constant: 25)
         ])
         
         
