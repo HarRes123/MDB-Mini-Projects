@@ -161,7 +161,7 @@ class DetailsVC: UIViewController {
         button.layer.borderColor = UIColor.black.cgColor
         button.backgroundColor = .systemRed
         button.setTitle("Delete", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 18)
+        button.titleLabel?.font = .systemFont(ofSize: 15)
         button.isHidden = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
