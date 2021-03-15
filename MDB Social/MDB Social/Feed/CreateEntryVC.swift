@@ -65,20 +65,51 @@ class CreateEntryVC: UIViewController, UINavigationControllerDelegate {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    let dismissButton: UIButton = {
+        let button = UIButton()
+
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 15)
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Dismiss", for: .normal)
+        button.backgroundColor = .white
+
+        return button
+    }()
 
     private var selectedImageData: Data?
     private var selectedImageMetadata: Any?
     private var bannerQueue = NotificationBannerQueue(maxBannersOnScreenSimultaneously: 1)
 
     override func viewDidLoad() {
+        hideKeyboardWhenTappedAround()
+        
         view.backgroundColor = .background
       
+        dismissButton.addTarget(self, action: #selector(didDismiss(_:)), for: .touchUpInside)
+        
+        nameTextField.textField.delegate = self
+        descriptionTextField.textField.delegate = self
+        
+        view.addSubview(dismissButton)
+        NSLayoutConstraint.activate([
+            dismissButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25),
+            dismissButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25),
+            dismissButton.heightAnchor.constraint(equalToConstant: 40),
+            dismissButton.widthAnchor.constraint(equalToConstant: 90)
+        ])
+        
         view.addSubview(stack)
         NSLayoutConstraint.activate([
             stack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 30),
             stack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -30),
-            stack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 75)
+            stack.topAnchor.constraint(equalTo: dismissButton.safeAreaLayoutGuide.bottomAnchor, constant: 50)
         ])
+        
         
         stack.addArrangedSubview(nameTextField)
         stack.addArrangedSubview(descriptionTextField)
@@ -91,12 +122,10 @@ class CreateEntryVC: UIViewController, UINavigationControllerDelegate {
         datePicker.minuteInterval = 1
         
         imagePickerButton.addTarget(self, action: #selector(didTapSelectImage(_:)), for: .touchUpInside)
-       //datePicker.addTarget(self, action: #selector(didCreateDate(_:)), for: .valueChanged)
        
         imagePicker.delegate = self
-       //imagePickerBtn.addTarget(self, action: #selector(didTapChooseImage(_:)), for: .touchUpInside)
        
-       createEventButton.addTarget(self, action: #selector(didTapCreateEvent(_:)), for: .touchUpInside)
+        createEventButton.addTarget(self, action: #selector(didTapCreateEvent(_:)), for: .touchUpInside)
     }
     
     @objc func didTapSelectImage(_ sender: UIButton) {
@@ -136,26 +165,26 @@ class CreateEntryVC: UIViewController, UINavigationControllerDelegate {
     
     @objc func didTapCreateEvent(_ sender: UIButton) {
         guard let name = nameTextField.text, name != "" else {
-            showErrorBanner(withTitle: "Missing event name",
+            showErrorBanner(withTitle: "Missing name",
                             subtitle: "Please provide an event name")
             return
         }
         
         guard let description = descriptionTextField.text, description != "" else {
-            showErrorBanner(withTitle: "Missing event description",
+            showErrorBanner(withTitle: "Missing description",
                             subtitle: "Please provide an event description")
             return
         }
         
         if (selectedImageData == nil) {
-            showErrorBanner(withTitle: "Missing event image",
+            showErrorBanner(withTitle: "Missing image",
                             subtitle: "Please select an image")
             return
         }
         
         if (description.count > 140) {
-            showErrorBanner(withTitle: "Event description too long",
-                            subtitle: "Max 140 characters")
+            showErrorBanner(withTitle: "Event description over 140 characters",
+                            subtitle: "Please enter fewer than 140 characters")
             return
         }
         
@@ -197,6 +226,10 @@ class CreateEntryVC: UIViewController, UINavigationControllerDelegate {
                     shadowOpacity: 0.3,
                     shadowBlurRadius: 10)
     }
+    
+    @objc func didDismiss(_ sender: UIButton) {
+        dismiss(animated: true, completion: nil)
+    }
 
 }
 
@@ -213,5 +246,10 @@ extension CreateEntryVC: UIImagePickerControllerDelegate {
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
+    }
+}
+extension CreateEntryVC: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
     }
 }

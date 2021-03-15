@@ -92,14 +92,11 @@ class FeedCell: UICollectionViewCell {
         contentView.addSubview(event)
         contentView.addSubview(member)
         contentView.addSubview(rsvp)
-        
-        event.widthAnchor.constraint(equalToConstant: self.frame.width / 2).isActive = true
-
+   
         self.layer.cornerRadius = 15
         self.layer.masksToBounds = true
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor.black.cgColor
-
 
         NSLayoutConstraint.activate([
             event.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 15),
@@ -112,11 +109,9 @@ class FeedCell: UICollectionViewCell {
             imageView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             imageView.widthAnchor.constraint(equalToConstant: 90),
             imageView.heightAnchor.constraint(equalToConstant: 90),
-            event.widthAnchor.constraint(equalToConstant: self.frame.width / 2),
-            member.widthAnchor.constraint(equalToConstant: self.frame.width / 2),
-            rsvp.widthAnchor.constraint(equalToConstant: self.frame.width / 2)
-            
-            
+            event.widthAnchor.constraint(equalToConstant: self.frame.width * 0.65),
+            member.widthAnchor.constraint(equalToConstant: self.frame.width * 0.65),
+            rsvp.widthAnchor.constraint(equalToConstant: self.frame.width * 0.65)
         ])
     }
 

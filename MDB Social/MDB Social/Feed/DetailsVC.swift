@@ -7,11 +7,15 @@
 
 import Foundation
 import FirebaseStorage
+import FirebaseFirestore
 import UIKit
 
 class DetailsVC: UIViewController {
     var selectedEvent: Event? {
         didSet {
+            if (selectedEvent?.creator == FIRAuthProvider.shared.currentUser?.uid) {
+               isCreator = true
+            }
             
             let formatter = DateFormatter()
             formatter.dateFormat = "h:mm a 'on' MMMM dd, yyyy"
@@ -122,8 +126,63 @@ class DetailsVC: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    let dismissButton: UIButton = {
+        let button = UIButton()
+
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 15)
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Dismiss", for: .normal)
+        button.backgroundColor = .white
+
+        return button
+    }()
+    
+    private var rsvpButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .quaternarySystemFill
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        button.layer.cornerRadius = 15
+        button.titleLabel?.font = .systemFont(ofSize: 15)
+        button.setTitleColor(.black, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private var deleteButton: UIButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        button.backgroundColor = .systemRed
+        button.setTitle("Delete", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 18)
+        button.isHidden = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
+    private var isCreator: Bool = false
+    private var didRSVP: Bool?
             
     override func viewDidLoad() {
+        
+        didRSVP = selectedEvent?.rsvpUsers.contains((FIRAuthProvider.shared.currentUser?.uid)!)
+        
+        if isCreator {
+            deleteButton.isHidden = false
+        }
+
+        if didRSVP! {
+            rsvpButton.setTitle("Cancel RSVP", for: .normal)
+        } else {
+            rsvpButton.setTitle("RSVP", for: .normal)
+        }
         
         view.backgroundColor = #colorLiteral(red: 0.9567814469, green: 0.956869781, blue: 0.9610591531, alpha: 1)
         view.addSubview(stack)
@@ -133,12 +192,82 @@ class DetailsVC: UIViewController {
         stack.addArrangedSubview(date)
         stack.addArrangedSubview(desc)
         stack.addArrangedSubview(rsvp)
+        stack.addArrangedSubview(rsvpButton)
+        view.addSubview(deleteButton)
+        view.addSubview(dismissButton)
+        
+        dismissButton.addTarget(self, action: #selector(didDismiss(_:)), for: .touchUpInside)
+        deleteButton.addTarget(self, action: #selector(didTapDelete(_:)), for: .touchUpInside)
+        rsvpButton.addTarget(self, action: #selector(didTapRsvp(_:)), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            stack.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
+            deleteButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -25),
+            deleteButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25),
+            deleteButton.heightAnchor.constraint(equalToConstant: 40),
+            deleteButton.widthAnchor.constraint(equalToConstant: 90)
+        ])
+        
+        NSLayoutConstraint.activate([
+            dismissButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25),
+            dismissButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25),
+            dismissButton.heightAnchor.constraint(equalToConstant: 40),
+            dismissButton.widthAnchor.constraint(equalToConstant: 90)
+        ])
+        
+        NSLayoutConstraint.activate([
+            stack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 30),
+            stack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -30),
+            stack.topAnchor.constraint(equalTo: dismissButton.safeAreaLayoutGuide.bottomAnchor, constant: 30),
             imageView.heightAnchor.constraint(equalToConstant: 200)
         ])
+    }
+    
+    @objc func didTapRsvp(_ sender: UIButton) {
+        let ref = FIRDatabaseRequest.shared.db.collection("events").document(selectedEvent!.id!)
+        
+        if didRSVP! {
+            
+            didRSVP = false
+            
+            for i in 0..<selectedEvent!.rsvpUsers.count {
+                if selectedEvent?.rsvpUsers[i] == FIRAuthProvider.shared.currentUser?.uid {
+                    ref.updateData(["rsvpUsers": FieldValue.arrayRemove([selectedEvent!.rsvpUsers[i]])]) { error in
+                        if let error = error {
+                            print(error)
+                        }
+                    }
+                    selectedEvent?.rsvpUsers.remove(at: i)
+                    break
+                }
+            }
+            rsvpButton.setTitle("RSVP", for: .normal)
+            
+        } else {
+            print("TEST")
+            didRSVP = true
+            ref.updateData(["rsvpUsers": FieldValue.arrayUnion([(FIRAuthProvider.shared.currentUser?.uid)!])]) { error in
+                if let error = error {
+                    print(error)
+                }
+            }
+            selectedEvent?.rsvpUsers.append((FIRAuthProvider.shared.currentUser?.uid)!)
+            rsvpButton.setTitle("Cancel RSVP", for: .normal)
+        }
+    }
+    
+    @objc func didTapDelete(_ sender: UIButton) {
+        print("DELETE")
+        let ref = FIRDatabaseRequest.shared.db.collection("events").document(selectedEvent!.id!)
+        ref.delete() { error in
+            if let error = error {
+                print(error)
+            }
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func didDismiss(_ sender: UIButton) {
+        dismiss(animated: true, completion: nil)
+    
     }
 }
