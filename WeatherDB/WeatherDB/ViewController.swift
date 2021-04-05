@@ -9,9 +9,7 @@ import UIKit
 import GooglePlaces
 
 class ViewController: UIViewController {
-    
-    static let shared = ViewController()
-    
+        
     var locations: [CLLocation] = [] {
         didSet {
             let encoded = try! NSKeyedArchiver.archivedData(withRootObject: locations, requiringSecureCoding: true)
@@ -21,6 +19,7 @@ class ViewController: UIViewController {
     }
         
     var currLocation: CLLocation? {
+        
         didSet {
             if locations.count > 0 {
                 locations[0] = currLocation!
@@ -128,9 +127,14 @@ class ViewController: UIViewController {
         if i != 0 {
             locations.remove(at: i)
         } else {
-            let alert = UIAlertController(title: "This Cell Cannot be Deleted", message: "You may not delete the weather at your current location", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            switch CLLocationManager().authorizationStatus {
+                case .notDetermined, .restricted, .denied:
+                    locations.remove(at: i)
+                default:
+                    let alert = UIAlertController(title: "This Cell Cannot be Deleted", message: "You may not delete the weather at your current location", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+            }
         }
     }
 }
