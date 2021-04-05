@@ -121,6 +121,18 @@ class WeatherCollectionViewCell: UICollectionViewCell {
         return image
     }()
     
+    let deleteButton: UIButton = {
+        let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+        btn.backgroundColor = .systemRed
+        btn.setTitle("Delete", for: .normal)
+        btn.setTitleColor(.black, for: .normal)
+        btn.titleLabel?.font = .systemFont(ofSize: 15)
+        btn.layer.cornerRadius = 15
+        btn.layer.borderWidth = 1
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        return btn
+    }()
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         changeBoarder()
     }
@@ -128,8 +140,10 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     private func changeBoarder() {
         if self.traitCollection.userInterfaceStyle == .light {
             contentView.layer.borderColor = UIColor.black.cgColor
+            deleteButton.layer.borderColor = UIColor.black.cgColor
         } else {
             contentView.layer.borderColor = UIColor.lightGray.cgColor
+            deleteButton.layer.borderColor = UIColor.lightGray.cgColor
         }
     }
     
@@ -144,7 +158,8 @@ class WeatherCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(pressureLabel)
         contentView.addSubview(humidityLabel)
         contentView.addSubview(weatherIcon)
-        
+        contentView.addSubview(deleteButton)
+                
         contentView.backgroundColor = .secondarySystemFill
         contentView.layer.cornerRadius = 10
         contentView.layer.borderWidth = 1
@@ -179,11 +194,16 @@ class WeatherCollectionViewCell: UICollectionViewCell {
             pressureLabel.topAnchor.constraint(equalTo: feelLabel.safeAreaLayoutGuide.bottomAnchor, constant: 10),
            
             humidityLabel.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 10),
-            humidityLabel.topAnchor.constraint(equalTo: pressureLabel.safeAreaLayoutGuide.bottomAnchor, constant: 10)
+            humidityLabel.topAnchor.constraint(equalTo: pressureLabel.safeAreaLayoutGuide.bottomAnchor, constant: 10),
+            
+            deleteButton.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -10),
+            deleteButton.topAnchor.constraint(equalTo: pressureLabel.safeAreaLayoutGuide.bottomAnchor, constant: 5),
+            deleteButton.widthAnchor.constraint(equalToConstant: 75)
         ])
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
 }

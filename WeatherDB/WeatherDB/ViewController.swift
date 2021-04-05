@@ -10,6 +10,8 @@ import GooglePlaces
 
 class ViewController: UIViewController {
     
+    static let shared = ViewController()
+    
     var locations: [CLLocation] = [] {
         didSet {
             let encoded = try! NSKeyedArchiver.archivedData(withRootObject: locations, requiringSecureCoding: true)
@@ -25,6 +27,7 @@ class ViewController: UIViewController {
             } else {
                 locations.append(currLocation!)
             }
+            collectionView.reloadData()
         }
     }
     
@@ -95,6 +98,7 @@ class ViewController: UIViewController {
         view.addSubview(collectionView)
         view.addSubview(addButton)
         addButton.addTarget(self, action: #selector(addClicked), for: .touchUpInside)
+    
 
         collectionView.frame = view.bounds.inset(by: UIEdgeInsets(top: 100, left: 0, bottom: 0, right: 0))
         
@@ -119,6 +123,16 @@ class ViewController: UIViewController {
         return collectionView
     }()
     
+    @objc func deleteCell(sender: UIButton) {
+        let i : Int = (sender.layer.value(forKey: "index")) as! Int
+        if i != 0 {
+            locations.remove(at: i)
+        } else {
+            let alert = UIAlertController(title: "This Cell Cannot be Deleted", message: "You may not delete the weather at your current location", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
 }
 
 extension ViewController: UICollectionViewDataSource {
@@ -129,6 +143,9 @@ extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherCollectionViewCell.reuseIdentifier, for: indexPath) as! WeatherCollectionViewCell
         let location  = locations[indexPath.item]
+        cell.deleteButton.layer.setValue(indexPath.row, forKey: "index")
+        cell.deleteButton.addTarget(self, action: #selector(deleteCell), for: .touchUpInside)
+        
         WeatherRequest.shared.weather(at: location, completion: { result in
         switch result {
             case .success(let weather):
@@ -154,7 +171,7 @@ extension ViewController: GMSAutocompleteViewControllerDelegate {
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
 
         let coordinates = CLLocation(latitude: place.coordinate.latitude, longitude: place.coordinate.longitude)
-        self.locations.append(coordinates)
+        addLocation(location: coordinates)
         dismiss(animated: true, completion: nil)
 
     }
