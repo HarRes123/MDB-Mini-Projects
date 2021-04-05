@@ -91,6 +91,7 @@ class WeatherRequest {
             guard let response = response as? HTTPURLResponse,
                   response.statusCode == 200, let data = data, error == nil else {
                 // TODO: Error Handling
+                print(error as Any)
                 return
             }
             let decoder = JSONDecoder()
